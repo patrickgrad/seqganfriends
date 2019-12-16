@@ -1,3 +1,4 @@
 Line 16, length of generated sequences
 Line 38, positive file
 Line 90, vocab size
+Line 182, output file name
