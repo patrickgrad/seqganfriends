@@ -120,7 +120,7 @@ def main():
             # print 'pre-train epoch ', epoch, 'test_loss ', test_loss
             # buffer = 'epoch:\t'+ str(epoch) + '\tnll:\t' + str(test_loss) + '\n'
             # log.write(buffer)
-            print "Iteration {} complete".format(total_batch) 
+            print "Iteration {} complete".format(epoch) 
 
     print 'Start pre-training discriminator...'
     # Train 3 epoch on the generated data and do this for 50 times
