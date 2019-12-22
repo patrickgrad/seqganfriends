@@ -38,7 +38,15 @@ positive_file = 'save/rachel_lines.txt'
 negative_file = 'save/generator_sample.txt'
 eval_file = 'save/eval_file.txt'
 generated_num = 10000
+log_file = "save/log_file.txt"
 
+def create_log():
+    with open(log_file, "w") as f:
+        f.write("")
+
+def write_to_log(string):
+    with open(log_file, "a") as f:
+        f.write(string + "\n")
 
 def generate_samples(sess, trainable_model, batch_size, generated_num, output_file):
     # Generate Samples
@@ -87,6 +95,8 @@ def main():
     # need for v1 -> v2 port
     tf.compat.v1.disable_eager_execution()
 
+    create_log()
+
     gen_data_loader = Gen_Data_loader(BATCH_SIZE)
     likelihood_data_loader = Gen_Data_loader(BATCH_SIZE) # For testing
     vocab_size = 7159
@@ -112,7 +122,8 @@ def main():
     log = open('save/experiment-log.txt', 'w')
     #  pre-train generator
     print('Start pre-training...')
-    log.write('pre-training...\n')
+    write_to_log('Start pre-training...')
+
     for epoch in range(PRE_EPOCH_NUM):
         loss = pre_train_epoch(sess, generator, gen_data_loader)
         if epoch % 5 == 0:
@@ -123,8 +134,11 @@ def main():
             # buffer = 'epoch:\t'+ str(epoch) + '\tnll:\t' + str(test_loss) + '\n'
             # log.write(buffer)
             print("Iteration {} complete".format(epoch))
+            write_to_log("Iteration {} complete".format(epoch))
 
     print('Start pre-training discriminator...')
+    write_to_log('Start pre-training discriminator...')
+
     # Train 3 epoch on the generated data and do this for 50 times
     # for _ in range(50):
     for _ in range(1):
@@ -145,8 +159,11 @@ def main():
     rollout = ROLLOUT(generator, 0.8)
 
     print('#########################################################################')
+    write_to_log('#########################################################################')
+
     print('Start Adversarial Training...')
-    log.write('adversarial training...\n')
+    write_to_log('Start Adversarial Training...')
+
     # for total_batch in range(TOTAL_BATCH):
     for total_batch in range(1):
         # Train the generator for one step
@@ -164,7 +181,9 @@ def main():
             # buffer = 'epoch:\t' + str(total_batch) + '\tnll:\t' + str(test_loss) + '\n'
             # print 'total_batch: ', total_batch, 'test_loss: ', test_loss
             # log.write(buffer)
-            print("Iteration {} complete".format(total_batch))
+        
+        print("Generator iteration {} complete".format(total_batch))
+        write_to_log("Generator iteration {} complete".format(total_batch))
 
         # Update roll-out parameters
         rollout.update_params()
@@ -186,6 +205,13 @@ def main():
                         discriminator.dropout_keep_prob: dis_dropout_keep_prob
                     }
                     _ = sess.run(discriminator.train_op, feed)
+
+        print("Discriminator iteration {} complete".format(total_batch))
+        write_to_log("Discriminator iteration {} complete".format(total_batch))
+
+
+    print("Writing final output...")
+    write_to_log("Writing final output...")
 
     # Final output is a list of new lines the character "would" say
     generate_samples(sess, generator, BATCH_SIZE, 100000, "save/new_rachel_lines.txt")
