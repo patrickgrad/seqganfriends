@@ -109,7 +109,7 @@ def main():
 
     log = open('save/experiment-log.txt', 'w')
     #  pre-train generator
-    print 'Start pre-training...'
+    print('Start pre-training...')
     log.write('pre-training...\n')
     for epoch in xrange(PRE_EPOCH_NUM):
         loss = pre_train_epoch(sess, generator, gen_data_loader)
@@ -120,9 +120,9 @@ def main():
             # print 'pre-train epoch ', epoch, 'test_loss ', test_loss
             # buffer = 'epoch:\t'+ str(epoch) + '\tnll:\t' + str(test_loss) + '\n'
             # log.write(buffer)
-            print "Iteration {} complete".format(epoch) 
+            print("Iteration {} complete".format(epoch))
 
-    print 'Start pre-training discriminator...'
+    print('Start pre-training discriminator...')
     # Train 3 epoch on the generated data and do this for 50 times
     # for _ in range(50):
     for _ in range(1):
@@ -142,8 +142,8 @@ def main():
 
     rollout = ROLLOUT(generator, 0.8)
 
-    print '#########################################################################'
-    print 'Start Adversarial Training...'
+    print('#########################################################################')
+    print('Start Adversarial Training...')
     log.write('adversarial training...\n')
     # for total_batch in range(TOTAL_BATCH):
     for total_batch in range(1):
@@ -162,7 +162,7 @@ def main():
             # buffer = 'epoch:\t' + str(total_batch) + '\tnll:\t' + str(test_loss) + '\n'
             # print 'total_batch: ', total_batch, 'test_loss: ', test_loss
             # log.write(buffer)
-            print "Iteration {} complete".format(total_batch)
+            print("Iteration {} complete".format(total_batch))
 
         # Update roll-out parameters
         rollout.update_params()
