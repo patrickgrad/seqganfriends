@@ -129,7 +129,7 @@ class Discriminator(object):
                 losses = tf.nn.softmax_cross_entropy_with_logits(logits=self.scores, labels=self.input_y)
                 self.loss = tf.reduce_mean(losses) + l2_reg_lambda * l2_loss
 
-        self.params = [param for param in tf.trainable_variables() if 'discriminator' in param.name]
+        self.params = [param for param in tf.compat.v1.trainable_variables() if 'discriminator' in param.name]
         d_optimizer = tf.compat.v1.train.AdamOptimizer(1e-4)
         grads_and_vars = d_optimizer.compute_gradients(self.loss, self.params, aggregation_method=2)
         self.train_op = d_optimizer.apply_gradients(grads_and_vars)
