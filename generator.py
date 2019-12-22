@@ -91,7 +91,7 @@ class Generator(object):
 
         # pretraining loss
         self.pretrain_loss = -tf.reduce_sum(
-            tf.one_hot(tf.to_int32(tf.reshape(self.x, [-1])), self.num_emb, 1.0, 0.0) * tf.compat.v1.log(
+            tf.one_hot(tf.compat.v1.to_int32(tf.reshape(self.x, [-1])), self.num_emb, 1.0, 0.0) * tf.compat.v1.log(
                 tf.clip_by_value(tf.reshape(self.g_predictions, [-1, self.num_emb]), 1e-20, 1.0)
             )
         ) / (self.sequence_length * self.batch_size)
@@ -107,7 +107,7 @@ class Generator(object):
         #######################################################################################################
         self.g_loss = -tf.reduce_sum(
             tf.reduce_sum(
-                tf.one_hot(tf.to_int32(tf.reshape(self.x, [-1])), self.num_emb, 1.0, 0.0) * tf.compat.v1.log(
+                tf.one_hot(tf.compat.v1.to_int32(tf.reshape(self.x, [-1])), self.num_emb, 1.0, 0.0) * tf.compat.v1.log(
                     tf.clip_by_value(tf.reshape(self.g_predictions, [-1, self.num_emb]), 1e-20, 1.0)
                 ), 1) * tf.reshape(self.rewards, [-1])
         )
