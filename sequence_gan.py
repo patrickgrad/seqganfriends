@@ -84,6 +84,9 @@ def main():
     np.random.seed(SEED)
     assert START_TOKEN == 0
 
+    # need for v1 -> v2 port
+    tf.compat.v1.disable_eager_execution()
+
     gen_data_loader = Gen_Data_loader(BATCH_SIZE)
     likelihood_data_loader = Gen_Data_loader(BATCH_SIZE) # For testing
     vocab_size = 7159
