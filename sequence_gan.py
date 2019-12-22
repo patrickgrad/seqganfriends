@@ -58,7 +58,7 @@ def target_loss(sess, target_lstm, data_loader):
     nll = []
     data_loader.reset_pointer()
 
-    for it in xrange(data_loader.num_batch):
+    for it in range(data_loader.num_batch):
         batch = data_loader.next_batch()
         g_loss = sess.run(target_lstm.pretrain_loss, {target_lstm.x: batch})
         nll.append(g_loss)
@@ -71,7 +71,7 @@ def pre_train_epoch(sess, trainable_model, data_loader):
     supervised_g_losses = []
     data_loader.reset_pointer()
 
-    for it in xrange(data_loader.num_batch):
+    for it in range(data_loader.num_batch):
         batch = data_loader.next_batch()
         _, g_loss = trainable_model.pretrain_step(sess, batch)
         supervised_g_losses.append(g_loss)
@@ -113,7 +113,7 @@ def main():
     #  pre-train generator
     print('Start pre-training...')
     log.write('pre-training...\n')
-    for epoch in xrange(PRE_EPOCH_NUM):
+    for epoch in range(PRE_EPOCH_NUM):
         loss = pre_train_epoch(sess, generator, gen_data_loader)
         if epoch % 5 == 0:
             generate_samples(sess, generator, BATCH_SIZE, generated_num, eval_file)
@@ -133,7 +133,7 @@ def main():
         # for _ in range(3):
         for _ in range(1):
             dis_data_loader.reset_pointer()
-            for it in xrange(dis_data_loader.num_batch):
+            for it in range(dis_data_loader.num_batch):
                 x_batch, y_batch = dis_data_loader.next_batch()
                 feed = {
                     discriminator.input_x: x_batch,
@@ -178,7 +178,7 @@ def main():
             # for _ in range(3):
             for _ in range(1):
                 dis_data_loader.reset_pointer()
-                for it in xrange(dis_data_loader.num_batch):
+                for it in range(dis_data_loader.num_batch):
                     x_batch, y_batch = dis_data_loader.next_batch()
                     feed = {
                         discriminator.input_x: x_batch,
