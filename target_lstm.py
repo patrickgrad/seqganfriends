@@ -106,7 +106,7 @@ class TARGET_LSTM(object):
         return outputs
 
     def init_matrix(self, shape):
-        return tf.random_normal(shape, stddev=1.0)
+        return tf.compat.v1.random_normal(shape, stddev=1.0)
 
     def create_recurrent_unit(self, params):
         # Weights and Bias for input and hidden tensor

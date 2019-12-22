@@ -126,7 +126,7 @@ class Generator(object):
         return outputs
 
     def init_matrix(self, shape):
-        return tf.random_normal(shape, stddev=0.1)
+        return tf.compat.v1.random_normal(shape, stddev=0.1)
 
     def init_vector(self, shape):
         return tf.zeros(shape)
