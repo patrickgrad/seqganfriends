@@ -14,8 +14,8 @@ EMB_DIM = 32 # embedding dimension
 HIDDEN_DIM = 32 # hidden state dimension of lstm cell
 SEQ_LENGTH = 247 # sequence length {'Chandler': 175, 'Ross': 198, 'Phoebe': 317, 'Monica': 279, 'Rachel': 247}
 START_TOKEN = 0
-PRE_EPOCH_NUM = 1 # supervise (maximum likelihood estimation) epochs
-# PRE_EPOCH_NUM = 120 # supervise (maximum likelihood estimation) epochs
+# PRE_EPOCH_NUM = 1 # supervise (maximum likelihood estimation) epochs
+PRE_EPOCH_NUM = 120 # supervise (maximum likelihood estimation) epochs
 SEED = 88
 BATCH_SIZE = 64
 
@@ -140,8 +140,8 @@ def main():
     write_to_log('Start pre-training discriminator...')
 
     # Train 3 epoch on the generated data and do this for 50 times
-    # for _ in range(50):
-    for _ in range(1):
+    for _ in range(50):
+    # for _ in range(1):
         generate_samples(sess, generator, BATCH_SIZE, generated_num, negative_file)
         dis_data_loader.load_train_data(positive_file, negative_file)
         # for _ in range(3):
@@ -164,8 +164,8 @@ def main():
     print('Start Adversarial Training...')
     write_to_log('Start Adversarial Training...')
 
-    # for total_batch in range(TOTAL_BATCH):
-    for total_batch in range(1):
+    for total_batch in range(TOTAL_BATCH):
+    # for total_batch in range(1):
         # Train the generator for one step
         for it in range(1):
             samples = generator.generate(sess)
@@ -189,13 +189,13 @@ def main():
         rollout.update_params()
 
         # Train the discriminator
-        # for _ in range(5):
-        for _ in range(1):
+        for _ in range(5):
+        # for _ in range(1):
             generate_samples(sess, generator, BATCH_SIZE, generated_num, negative_file)
             dis_data_loader.load_train_data(positive_file, negative_file)
 
-            # for _ in range(3):
-            for _ in range(1):
+            for _ in range(3):
+            # for _ in range(1):
                 dis_data_loader.reset_pointer()
                 for it in range(dis_data_loader.num_batch):
                     x_batch, y_batch = dis_data_loader.next_batch()
