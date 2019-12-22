@@ -82,7 +82,7 @@ class Discriminator(object):
                 with tf.name_scope("conv-maxpool-%s" % filter_size):
                     # Convolution Layer
                     filter_shape = [filter_size, embedding_size, 1, num_filter]
-                    W = tf.Variable(tf.truncated_normal(filter_shape, stddev=0.1), name="W")
+                    W = tf.Variable(tf.compat.v1.truncated_normal(filter_shape, stddev=0.1), name="W")
                     b = tf.Variable(tf.constant(0.1, shape=[num_filter]), name="b")
                     conv = tf.nn.conv2d(
                         self.embedded_chars_expanded,
@@ -116,7 +116,7 @@ class Discriminator(object):
 
             # Final (unnormalized) scores and predictions
             with tf.name_scope("output"):
-                W = tf.Variable(tf.truncated_normal([num_filters_total, num_classes], stddev=0.1), name="W")
+                W = tf.Variable(tf.compat.v1.truncated_normal([num_filters_total, num_classes], stddev=0.1), name="W")
                 b = tf.Variable(tf.constant(0.1, shape=[num_classes]), name="b")
                 l2_loss += tf.nn.l2_loss(W)
                 l2_loss += tf.nn.l2_loss(b)
