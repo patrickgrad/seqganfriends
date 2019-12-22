@@ -206,4 +206,4 @@ class Generator(object):
         return unit
 
     def g_optimizer(self, *args, **kwargs):
-        return tf.train.AdamOptimizer(*args, **kwargs)
+        return tf.compat.v1.train.AdamOptimizer(*args, **kwargs)
