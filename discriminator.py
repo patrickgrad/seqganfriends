@@ -25,7 +25,7 @@ def linear(input_, output_size, scope=None):
     input_size = shape[1]
 
     # Now the computation.
-    with tf.variable_scope(scope or "SimpleLinear"):
+    with tf.compat.v1.variable_scope(scope or "SimpleLinear"):
         matrix = tf.get_variable("Matrix", [output_size, input_size], dtype=input_.dtype)
         bias_term = tf.get_variable("Bias", [output_size], dtype=input_.dtype)
 
@@ -38,7 +38,7 @@ def highway(input_, size, num_layers=1, bias=-2.0, f=tf.nn.relu, scope='Highway'
     where g is nonlinearity, t is transform gate, and (1 - t) is carry gate.
     """
 
-    with tf.variable_scope(scope):
+    with tf.compat.v1.variable_scope(scope):
         for idx in range(num_layers):
             g = f(linear(input_, size, scope='highway_lin_%d' % idx))
 
@@ -66,7 +66,7 @@ class Discriminator(object):
         # Keeping track of l2 regularization loss (optional)
         l2_loss = tf.constant(0.0)
         
-        with tf.variable_scope('discriminator'):
+        with tf.compat.v1.variable_scope('discriminator'):
 
             # Embedding layer
             with tf.device('/cpu:0'), tf.name_scope("embedding"):
