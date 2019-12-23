@@ -12,7 +12,7 @@ from rollout import ROLLOUT
 ######################################################################################
 EMB_DIM = 32 # embedding dimension
 HIDDEN_DIM = 32 # hidden state dimension of lstm cell
-SEQ_LENGTH = 247 # sequence length {'Chandler': 175, 'Ross': 198, 'Phoebe': 317, 'Monica': 279, 'Rachel': 247}
+SEQ_LENGTH = 317 # sequence length {'Chandler': 175, 'Ross': 198, 'Phoebe': 317, 'Monica': 279, 'Rachel': 247}
 START_TOKEN = 0
 # PRE_EPOCH_NUM = 1 # supervise (maximum likelihood estimation) epochs
 PRE_EPOCH_NUM = 120 # supervise (maximum likelihood estimation) epochs
@@ -32,9 +32,9 @@ dis_batch_size = 64
 #########################################################################################
 #  Basic Training Parameters
 #########################################################################################
-TOTAL_BATCH = 200
+TOTAL_BATCH = 25 #200
 # positive_file = 'save/real_data.txt'
-positive_file = 'save/rachel_lines.txt'
+positive_file = 'save/phoebe_lines.txt'
 negative_file = 'save/generator_sample.txt'
 eval_file = 'save/eval_file.txt'
 generated_num = 10000
@@ -99,7 +99,7 @@ def main():
 
     gen_data_loader = Gen_Data_loader(BATCH_SIZE)
     likelihood_data_loader = Gen_Data_loader(BATCH_SIZE) # For testing
-    vocab_size = 7159
+    vocab_size = 6818
     dis_data_loader = Dis_dataloader(BATCH_SIZE)
 
     generator = Generator(vocab_size, BATCH_SIZE, EMB_DIM, HIDDEN_DIM, SEQ_LENGTH, START_TOKEN)
@@ -217,7 +217,7 @@ def main():
     write_to_log("Writing final output...")
 
     # Final output is a list of new lines the character "would" say
-    generate_samples(sess, generator, BATCH_SIZE, 100000, "save/new_rachel_lines.txt")
+    generate_samples(sess, generator, BATCH_SIZE, 100000, "save/new_phoebe_lines.txt")
 
     log.close()
 
