@@ -133,8 +133,8 @@ def main():
             # print 'pre-train epoch ', epoch, 'test_loss ', test_loss
             # buffer = 'epoch:\t'+ str(epoch) + '\tnll:\t' + str(test_loss) + '\n'
             # log.write(buffer)
-            print("Iteration {} complete".format(epoch))
-            write_to_log("Iteration {} complete".format(epoch))
+        print("Iteration {} complete".format(epoch))
+        write_to_log("Iteration {} complete".format(epoch))
 
     print('Start pre-training discriminator...')
     write_to_log('Start pre-training discriminator...')
@@ -155,6 +155,9 @@ def main():
                     discriminator.dropout_keep_prob: dis_dropout_keep_prob
                 }
                 _ = sess.run(discriminator.train_op, feed)
+
+        print("Iteration {} complete".format(_))
+        write_to_log("Iteration {} complete".format(_))
 
     rollout = ROLLOUT(generator, 0.8)
 
