@@ -12,7 +12,7 @@ from rollout import ROLLOUT
 ######################################################################################
 EMB_DIM = 32 # embedding dimension
 HIDDEN_DIM = 32 # hidden state dimension of lstm cell
-SEQ_LENGTH = 317 # sequence length {'Chandler': 175, 'Ross': 198, 'Phoebe': 317, 'Monica': 279, 'Rachel': 247}
+SEQ_LENGTH = 279 # sequence length {'Chandler': 175, 'Ross': 198, 'Phoebe': 317, 'Monica': 279, 'Rachel': 247}
 START_TOKEN = 0
 # PRE_EPOCH_NUM = 1 # supervise (maximum likelihood estimation) epochs
 PRE_EPOCH_NUM = 120 # supervise (maximum likelihood estimation) epochs
@@ -32,9 +32,9 @@ dis_batch_size = 64
 #########################################################################################
 #  Basic Training Parameters
 #########################################################################################
-TOTAL_BATCH = 25 #200
+TOTAL_BATCH = 100 #200
 # positive_file = 'save/real_data.txt'
-positive_file = 'save/phoebe_lines.txt'
+positive_file = 'save/monica_lines.txt'
 negative_file = 'save/generator_sample.txt'
 eval_file = 'save/eval_file.txt'
 generated_num = 10000
@@ -99,7 +99,7 @@ def main():
 
     gen_data_loader = Gen_Data_loader(BATCH_SIZE)
     likelihood_data_loader = Gen_Data_loader(BATCH_SIZE) # For testing
-    vocab_size = 6818
+    vocab_size = 6482
     dis_data_loader = Dis_dataloader(BATCH_SIZE)
 
     generator = Generator(vocab_size, BATCH_SIZE, EMB_DIM, HIDDEN_DIM, SEQ_LENGTH, START_TOKEN)
@@ -140,7 +140,7 @@ def main():
     write_to_log('Start pre-training discriminator...')
 
     # Train 3 epoch on the generated data and do this for 50 times
-    for _ in range(50):
+    for i in range(50):
     # for _ in range(1):
         generate_samples(sess, generator, BATCH_SIZE, generated_num, negative_file)
         dis_data_loader.load_train_data(positive_file, negative_file)
@@ -156,8 +156,8 @@ def main():
                 }
                 _ = sess.run(discriminator.train_op, feed)
 
-        print("Iteration {} complete".format(_))
-        write_to_log("Iteration {} complete".format(_))
+        print("Iteration {} complete".format(i))
+        write_to_log("Iteration {} complete".format(i))
 
     rollout = ROLLOUT(generator, 0.8)
 
