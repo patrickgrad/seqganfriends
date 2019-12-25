@@ -217,7 +217,7 @@ def main():
     write_to_log("Writing final output...")
 
     # Final output is a list of new lines the character "would" say
-    generate_samples(sess, generator, BATCH_SIZE, 100000, "save/new_phoebe_lines.txt")
+    generate_samples(sess, generator, BATCH_SIZE, 100000, "save/new_monica_lines.txt")
 
     log.close()
 
