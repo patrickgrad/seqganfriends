@@ -5,14 +5,17 @@ from dataloader import Gen_Data_loader, Dis_dataloader
 from generator import Generator
 from discriminator import Discriminator
 from rollout import ROLLOUT
-# from target_lstm import TARGET_LSTM
+import argparse
+
+length_dict = {'chandler': 175, 'ross': 198, 'phoebe': 317, 'monica': 279, 'rachel': 247}
+dictionary_dict = {'chandler': 7368, 'ross': 7855, 'phoebe': 6818, 'monica': 6482, 'rachel': 7159}
 
 #########################################################################################
 #  Generator  Hyper-parameters
 ######################################################################################
 EMB_DIM = 32 # embedding dimension
 HIDDEN_DIM = 32 # hidden state dimension of lstm cell
-SEQ_LENGTH = 317 # sequence length {'Chandler': 175, 'Ross': 198, 'Phoebe': 317, 'Monica': 279, 'Rachel': 247}
+SEQ_LENGTH = 0 # sequence length {'Chandler': 175, 'Ross': 198, 'Phoebe': 317, 'Monica': 279, 'Rachel': 247}
 START_TOKEN = 0
 PRE_EPOCH_NUM = 120 # supervise (maximum likelihood estimation) epochs
 SEED = 88
@@ -33,7 +36,7 @@ dis_batch_size = 64
 #########################################################################################
 TOTAL_BATCH = 25 #200
 # positive_file = 'save/real_data.txt'
-positive_file = 'save/phoebe_lines.txt'
+positive_file = 'save/chandler_lines.txt'
 negative_file = 'save/generator_sample.txt'
 eval_file = 'save/eval_file.txt'
 generated_num = 10000
@@ -86,7 +89,15 @@ def pre_train_epoch(sess, trainable_model, data_loader):
     return np.mean(supervised_g_losses)
 
 
-def main():
+def main(character):
+    print("Processing character : \"{}\"".format(character))
+    write_to_log("Processing character : \"{}\"".format(character))
+
+    vocab_size = length_dict[character]
+    SEQ_LENGTH = dictionary_dict[character]
+    positive_file = "save/{}_lines.txt".format(character)
+    output_file = "save/new_{}_lines.txt".format(character)
+
     random.seed(SEED)
     np.random.seed(SEED)
     assert START_TOKEN == 0
@@ -98,7 +109,7 @@ def main():
 
     gen_data_loader = Gen_Data_loader(BATCH_SIZE)
     likelihood_data_loader = Gen_Data_loader(BATCH_SIZE) # For testing
-    vocab_size = 6818
+
     dis_data_loader = Dis_dataloader(BATCH_SIZE)
 
     generator = Generator(vocab_size, BATCH_SIZE, EMB_DIM, HIDDEN_DIM, SEQ_LENGTH, START_TOKEN)
@@ -216,10 +227,16 @@ def main():
     write_to_log("Writing final output...")
 
     # Final output is a list of new lines the character "would" say
-    generate_samples(sess, generator, BATCH_SIZE, 100000, "save/new_phoebe_lines.txt")
+    generate_samples(sess, generator, BATCH_SIZE, 100000, output_file)
 
     log.close()
 
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser(description='Get name of character whose lines to generate')
+    parser.add_argument('--character')
+    args = parser.parse_args()
+
+    # print(args.character.lower())
+
+    main(args.character.lower())
