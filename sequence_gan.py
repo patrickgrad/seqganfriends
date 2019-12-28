@@ -93,8 +93,8 @@ def main(character):
     print("Processing character : \"{}\"".format(character))
     write_to_log("Processing character : \"{}\"".format(character))
 
-    vocab_size = length_dict[character]
-    SEQ_LENGTH = dictionary_dict[character]
+    vocab_size = dictionary_dict[character]
+    SEQ_LENGTH = length_dict[character]
     positive_file = "save/{}_lines.txt".format(character)
     output_file = "save/new_{}_lines.txt".format(character)
 
