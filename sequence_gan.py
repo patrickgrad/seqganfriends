@@ -14,7 +14,6 @@ EMB_DIM = 32 # embedding dimension
 HIDDEN_DIM = 32 # hidden state dimension of lstm cell
 SEQ_LENGTH = 317 # sequence length {'Chandler': 175, 'Ross': 198, 'Phoebe': 317, 'Monica': 279, 'Rachel': 247}
 START_TOKEN = 0
-# PRE_EPOCH_NUM = 1 # supervise (maximum likelihood estimation) epochs
 PRE_EPOCH_NUM = 120 # supervise (maximum likelihood estimation) epochs
 SEED = 88
 BATCH_SIZE = 64
@@ -136,81 +135,81 @@ def main():
         print("Iteration {} complete".format(epoch))
         write_to_log("Iteration {} complete".format(epoch))
 
-    print('Start pre-training discriminator...')
-    write_to_log('Start pre-training discriminator...')
+    # print('Start pre-training discriminator...')
+    # write_to_log('Start pre-training discriminator...')
 
-    # Train 3 epoch on the generated data and do this for 50 times
-    for _ in range(50):
-    # for _ in range(1):
-        generate_samples(sess, generator, BATCH_SIZE, generated_num, negative_file)
-        dis_data_loader.load_train_data(positive_file, negative_file)
-        for _ in range(3):
-        # for _ in range(1):
-            dis_data_loader.reset_pointer()
-            for it in range(dis_data_loader.num_batch):
-                x_batch, y_batch = dis_data_loader.next_batch()
-                feed = {
-                    discriminator.input_x: x_batch,
-                    discriminator.input_y: y_batch,
-                    discriminator.dropout_keep_prob: dis_dropout_keep_prob
-                }
-                _ = sess.run(discriminator.train_op, feed)
+    # # Train 3 epoch on the generated data and do this for 50 times
+    # for _ in range(50):
+    # # for _ in range(1):
+    #     generate_samples(sess, generator, BATCH_SIZE, generated_num, negative_file)
+    #     dis_data_loader.load_train_data(positive_file, negative_file)
+    #     for _ in range(3):
+    #     # for _ in range(1):
+    #         dis_data_loader.reset_pointer()
+    #         for it in range(dis_data_loader.num_batch):
+    #             x_batch, y_batch = dis_data_loader.next_batch()
+    #             feed = {
+    #                 discriminator.input_x: x_batch,
+    #                 discriminator.input_y: y_batch,
+    #                 discriminator.dropout_keep_prob: dis_dropout_keep_prob
+    #             }
+    #             _ = sess.run(discriminator.train_op, feed)
 
-        print("Iteration {} complete".format(_))
-        write_to_log("Iteration {} complete".format(_))
+    #     print("Iteration {} complete".format(_))
+    #     write_to_log("Iteration {} complete".format(_))
 
-    rollout = ROLLOUT(generator, 0.8)
+    # rollout = ROLLOUT(generator, 0.8)
 
-    print('#########################################################################')
-    write_to_log('#########################################################################')
+    # print('#########################################################################')
+    # write_to_log('#########################################################################')
 
-    print('Start Adversarial Training...')
-    write_to_log('Start Adversarial Training...')
+    # print('Start Adversarial Training...')
+    # write_to_log('Start Adversarial Training...')
 
-    for total_batch in range(TOTAL_BATCH):
-    # for total_batch in range(1):
-        # Train the generator for one step
-        for it in range(1):
-            samples = generator.generate(sess)
-            rewards = rollout.get_reward(sess, samples, 16, discriminator)
-            feed = {generator.x: samples, generator.rewards: rewards}
-            _ = sess.run(generator.g_updates, feed_dict=feed)
+    # for total_batch in range(TOTAL_BATCH):
+    # # for total_batch in range(1):
+    #     # Train the generator for one step
+    #     for it in range(1):
+    #         samples = generator.generate(sess)
+    #         rewards = rollout.get_reward(sess, samples, 16, discriminator)
+    #         feed = {generator.x: samples, generator.rewards: rewards}
+    #         _ = sess.run(generator.g_updates, feed_dict=feed)
 
-        # Test
-        if total_batch % 5 == 0 or total_batch == TOTAL_BATCH - 1:
-            generate_samples(sess, generator, BATCH_SIZE, generated_num, eval_file)
-            likelihood_data_loader.create_batches(eval_file)
-            # test_loss = target_loss(sess, target_lstm, likelihood_data_loader)
-            # buffer = 'epoch:\t' + str(total_batch) + '\tnll:\t' + str(test_loss) + '\n'
-            # print 'total_batch: ', total_batch, 'test_loss: ', test_loss
-            # log.write(buffer)
+    #     # Test
+    #     if total_batch % 5 == 0 or total_batch == TOTAL_BATCH - 1:
+    #         generate_samples(sess, generator, BATCH_SIZE, generated_num, eval_file)
+    #         likelihood_data_loader.create_batches(eval_file)
+    #         # test_loss = target_loss(sess, target_lstm, likelihood_data_loader)
+    #         # buffer = 'epoch:\t' + str(total_batch) + '\tnll:\t' + str(test_loss) + '\n'
+    #         # print 'total_batch: ', total_batch, 'test_loss: ', test_loss
+    #         # log.write(buffer)
         
-        print("Generator iteration {} complete".format(total_batch))
-        write_to_log("Generator iteration {} complete".format(total_batch))
+    #     print("Generator iteration {} complete".format(total_batch))
+    #     write_to_log("Generator iteration {} complete".format(total_batch))
 
-        # Update roll-out parameters
-        rollout.update_params()
+    #     # Update roll-out parameters
+    #     rollout.update_params()
 
-        # Train the discriminator
-        for _ in range(5):
-        # for _ in range(1):
-            generate_samples(sess, generator, BATCH_SIZE, generated_num, negative_file)
-            dis_data_loader.load_train_data(positive_file, negative_file)
+    #     # Train the discriminator
+    #     for _ in range(5):
+    #     # for _ in range(1):
+    #         generate_samples(sess, generator, BATCH_SIZE, generated_num, negative_file)
+    #         dis_data_loader.load_train_data(positive_file, negative_file)
 
-            for _ in range(3):
-            # for _ in range(1):
-                dis_data_loader.reset_pointer()
-                for it in range(dis_data_loader.num_batch):
-                    x_batch, y_batch = dis_data_loader.next_batch()
-                    feed = {
-                        discriminator.input_x: x_batch,
-                        discriminator.input_y: y_batch,
-                        discriminator.dropout_keep_prob: dis_dropout_keep_prob
-                    }
-                    _ = sess.run(discriminator.train_op, feed)
+    #         for _ in range(3):
+    #         # for _ in range(1):
+    #             dis_data_loader.reset_pointer()
+    #             for it in range(dis_data_loader.num_batch):
+    #                 x_batch, y_batch = dis_data_loader.next_batch()
+    #                 feed = {
+    #                     discriminator.input_x: x_batch,
+    #                     discriminator.input_y: y_batch,
+    #                     discriminator.dropout_keep_prob: dis_dropout_keep_prob
+    #                 }
+    #                 _ = sess.run(discriminator.train_op, feed)
 
-        print("Discriminator iteration {} complete".format(total_batch))
-        write_to_log("Discriminator iteration {} complete".format(total_batch))
+    #     print("Discriminator iteration {} complete".format(total_batch))
+    #     write_to_log("Discriminator iteration {} complete".format(total_batch))
 
 
     print("Writing final output...")
